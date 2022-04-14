@@ -12,7 +12,7 @@ First, [install Docker](https://docs.docker.com/installation/) and [Docker Compo
 
 Next, clone this repo:
 ```shell
-$ git clone {{git_repository}}
+$ git clone https://github.com/KhasanovR/uniredTelegramBot.git
 $ cd EduOn
 ```
 
