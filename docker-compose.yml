@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  redis:
+    image: library/redis:5.0-alpine
+
+  app:
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    image: ${DOCKER_REPOSITORY}/app:${DOCKER_APP_VERSION}
+    env_file:
+      - .env
+    depends_on:
+      - redis

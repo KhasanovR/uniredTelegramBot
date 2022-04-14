@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  redis:
+    restart: unless-stopped
+    volumes:
+      - /var/lib/redis/data:/data
+
+  app:
+    restart: unless-stopped

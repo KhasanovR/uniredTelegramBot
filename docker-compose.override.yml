@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  redis:
+    ports:
+      - 6379:6379
+    volumes:
+      - unired_tg_bot_redis:/data
+  app:
+    volumes:
+      - .:/app
+    command: python /app/main.py
+
+volumes:
+  unired_tg_bot_redis:
