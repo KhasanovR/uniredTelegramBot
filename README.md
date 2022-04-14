@@ -13,7 +13,7 @@ First, [install Docker](https://docs.docker.com/installation/) and [Docker Compo
 Next, clone this repo:
 ```shell
 $ git clone https://github.com/KhasanovR/uniredTelegramBot.git
-$ cd EduOn
+$ cd uniredTelegramBot
 ```
 
 ## Configuration
@@ -25,4 +25,5 @@ Next, clone this repo:
 DOCKER_REPOSITORY={{your DOCKER_REPOSITORY}}
 DOCKER_APP_VERSION={{your version}}
 DEBUG=True(optional)
+TG_API_TOKEN={{your api token}}
 ```
