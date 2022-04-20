@@ -1,8 +1,11 @@
 version: "3"
 
 services:
-  redis:
-    image: library/redis:5.0-alpine
+  db:
+    image: postgres:12.3
+    hostname: db
+    env_file:
+      - .env
 
   app:
     build:
@@ -12,4 +15,4 @@ services:
     env_file:
       - .env
     depends_on:
-      - redis
+      - db
