@@ -1,10 +1,6 @@
 from aiogram.dispatcher.filters.state import StatesGroup, State
 
 
-class Home(StatesGroup):
-    home_menu = State()
-
-
 class Application(StatesGroup):
     application_menu = State()
 

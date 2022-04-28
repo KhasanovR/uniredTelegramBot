@@ -6,7 +6,6 @@ from keyboards.default import *
 from loader import dp
 import database
 from data.config import LANG_STORAGE
-from states import Home
 
 db = database.DBCommands()
 
@@ -28,11 +27,10 @@ async def bot_start(message: types.Message, state: FSMContext):
         await message.answer("🌍 Язык/Til:", reply_markup=language_button)
 
 
-@dp.message_handler(Text(equals=["🏠 Bosh sahifaga", "🏠 На главную"]), state="*")
+@dp.message_handler(Text(equals=["🏠 Asosiy sahifaga", "🏠 На главную"]), state="*")
 async def back(message: Message, state: FSMContext):
     user_id = message.from_user.id
     await state.reset_state()
-    await Home.home_menu.set()
     if LANG_STORAGE[user_id] == 'ru':
         await message.answer("👇 Выберите действие:", reply_markup=menu_ru_button)
     elif LANG_STORAGE[user_id] == 'uz':

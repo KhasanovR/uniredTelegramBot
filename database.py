@@ -22,7 +22,7 @@ class User(db.Model):
     language = Column(String(2))
     full_name = Column(String(100))
     username = Column(String(50))
-    token = Column(String(255))
+    token = Column(String(255), nullable=True)
     query: sql.Select
 
     def __repr__(self):
@@ -39,7 +39,7 @@ class DBCommands:
         user = await User.query.where(User.user_id == user_id).gino.first()
         return user
 
-    async def add_new_user(self, token):
+    async def add_new_user(self, token=None):
         user = types.User.get_current()
         old_user = await self.get_user(user.id)
         if old_user:

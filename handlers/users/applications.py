@@ -1,14 +1,14 @@
 from aiogram.types import Message
-from keyboards.default import applications_uz_button, applications_ru_button
+from keyboards.default import applications_uz_button, applications_ru_button, menu_uz_button, menu_ru_button
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher import FSMContext
 from loader import dp
-from states import Application, Home
+from states import Application
 from data.config import LANG_STORAGE
 
 
 @dp.message_handler(Text(equals=["🧾 Mening Arizalarim", "🧾 Мои заявки"]))
-async def show_application_menu(message: Message):
+async def show_applications_menu(message: Message):
     user_id = message.from_user.id
     await Application.application_menu.set()
     if LANG_STORAGE[user_id] == 'ru':
@@ -31,12 +31,11 @@ async def apply_for_card(message: Message, state: FSMContext):
     # TODO
 
 
-@dp.message_handler(Text(equals=["⬅️ Ortga", "⬅️ Назад"]), state=Application.application_menu)
+@dp.message_handler(Text(equals=["⬅️Orqaga", "⬅ Назад"]), state=Application.application_menu)
 async def back(message: Message, state: FSMContext):
     user_id = message.from_user.id
     await state.reset_state()
-    await Home.home_menu.set()
     if LANG_STORAGE[user_id] == 'ru':
-        await message.answer("👇 Выберите действие:", reply_markup=applications_ru_button)
+        await message.answer("👇 Выберите действие:", reply_markup=menu_ru_button)
     elif LANG_STORAGE[user_id] == 'uz':
-        await message.answer("👇 Quyidagilardan birini tanlang", reply_markup=applications_uz_button)
+        await message.answer("👇 Quyidagilardan birini tanlang", reply_markup=menu_uz_button)

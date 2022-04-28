@@ -1,5 +1,5 @@
 from aiogram.types import Message
-from keyboards.default import get_payment_options
+from keyboards.default import payments_uz_button, payments_ru_button, menu_uz_button, menu_ru_button
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher import FSMContext
 from loader import dp
@@ -12,9 +12,9 @@ async def show_payments_menu(message: Message):
     user_id = message.from_user.id
     await Payment.payment_menu.set()
     if LANG_STORAGE[user_id] == 'ru':
-        await message.answer("👇 Выберите действие:", reply_markup=get_payment_options(user_id, 'ru'))
+        await message.answer("👇 Выберите действие:", reply_markup=payments_ru_button)
     elif LANG_STORAGE[user_id] == 'uz':
-        await message.answer("👇 Quyidagilardan birini tanlang", reply_markup=get_payment_options(user_id, 'uz'))
+        await message.answer("👇 Quyidagilardan birini tanlang", reply_markup=payments_uz_button)
 
 
 @dp.message_handler(Text(equals=["📱 Uyali aloqa", "📱 Сотовая связь"]),
@@ -85,3 +85,13 @@ async def show_list_of_charity_orgs(message: Message, state: FSMContext):
 async def show_list_of_utility_services(message: Message, state: FSMContext):
     user_id = message.from_user.id
     # TODO
+
+
+@dp.message_handler(Text(equals=["⬅️Orqaga", "⬅ Назад"]), state=Payment.payment_menu)
+async def back(message: Message, state: FSMContext):
+    user_id = message.from_user.id
+    await state.reset_state()
+    if LANG_STORAGE[user_id] == 'ru':
+        await message.answer("👇 Выберите действие:", reply_markup=menu_ru_button)
+    elif LANG_STORAGE[user_id] == 'uz':
+        await message.answer("👇 Quyidagilardan birini tanlang", reply_markup=menu_uz_button)
