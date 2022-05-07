@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 LANG_STORAGE = {}
+OTP_TOKEN_STORAGE = {}
 BOT_TOKEN = str(os.getenv("TG_API_TOKEN"))
 admins = [
 ]

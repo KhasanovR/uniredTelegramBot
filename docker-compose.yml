@@ -6,6 +6,13 @@ services:
     hostname: db
     env_file:
       - .env
+    networks:
+      - backend
+
+  redis:
+    image: library/redis:5.0-alpine
+    networks:
+      - backend
 
   app:
     build:
@@ -14,5 +21,12 @@ services:
     image: ${DOCKER_REPOSITORY}/app:${DOCKER_APP_VERSION}
     env_file:
       - .env
+    networks:
+      - backend
     depends_on:
       - db
+      - redis
+
+networks:
+  backend:
+    driver: bridge

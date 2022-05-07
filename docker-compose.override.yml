@@ -11,6 +11,12 @@ services:
     ports:
       - "5432:5432"
 
+  redis:
+    ports:
+      - 6379:6379
+    volumes:
+      - unired_tg_bot_redis:/data
+
   app:
     volumes:
       - .:/app
@@ -18,3 +24,4 @@ services:
 
 volumes:
   unired_tg_bot_db:
+  unired_tg_bot_redis:

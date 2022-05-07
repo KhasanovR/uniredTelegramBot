@@ -1,6 +1,18 @@
 from aiogram.dispatcher.filters.state import StatesGroup, State
 
 
+class Authentication(StatesGroup):
+    getting_phone_number = State()
+    step_one = State()
+    step_two = State()
+    login = State()
+    register = State()
+
+
+class Home(StatesGroup):
+    home_menu = State()
+
+
 class Application(StatesGroup):
     application_menu = State()
 

@@ -6,6 +6,7 @@ from keyboards.default import *
 from loader import dp
 import database
 from data.config import LANG_STORAGE
+from states import Authentication
 
 db = database.DBCommands()
 
@@ -18,12 +19,11 @@ async def bot_start(message: types.Message, state: FSMContext):
     if user is not None:
         if user.language == 'ru':
             LANG_STORAGE[user_id] = 'ru'
-            await message.answer("👇 Выберите действие:", reply_markup=menu_ru_button)
         elif user.language == 'uz':
             LANG_STORAGE[user_id] = 'uz'
-            await message.answer("👇 Xizmat turini tanlang:", reply_markup=menu_uz_button)
+        await Authentication.getting_phone_number.set()
     else:
-        user = await db.add_new_user()
+        await db.add_new_user()
         await message.answer("🌍 Язык/Til:", reply_markup=language_button)
 
 

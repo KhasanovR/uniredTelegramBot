@@ -1,4 +1,5 @@
 from .applications import dp
+from .auth import db
 from .cards import dp
 from .help import dp
 from .history import dp
