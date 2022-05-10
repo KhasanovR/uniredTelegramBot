@@ -91,8 +91,16 @@ async def process_step_two(message: types.Message, state: FSMContext):
             elif LANG_STORAGE[user_id] == 'uz':
                 await message.reply("Iltimos, parolni kiriting:")
             if is_registered:
+                if LANG_STORAGE[user_id] == 'ru':
+                    await message.reply("Пожалуйста введите пароль для авторизоваться:")
+                elif LANG_STORAGE[user_id] == 'uz':
+                    await message.reply("Iltimos, tizimga kirish uchun parolni kiriting:")
                 await Authentication.login.set()
             else:
+                if LANG_STORAGE[user_id] == 'ru':
+                    await message.reply("Пожалуйста введите пароль для регистрация:")
+                elif LANG_STORAGE[user_id] == 'uz':
+                    await message.reply("Iltimos, ro'yxatdan o'tish uchun parolni kiriting:")
                 await Authentication.register.set()
         else:
             await error_happened(message, state, user_id)
