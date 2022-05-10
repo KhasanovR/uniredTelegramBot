@@ -25,6 +25,7 @@ async def bot_start(message: types.Message, state: FSMContext):
     else:
         await db.add_new_user()
         await message.answer("🌍 Язык/Til:", reply_markup=language_button)
+        await Authentication.init.set()
 
 
 @dp.message_handler(Text(equals=["🏠 Asosiy sahifaga", "🏠 На главную"]), state="*")
