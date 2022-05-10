@@ -5,7 +5,8 @@ from sqlalchemy import (
     Column,
     Integer,
     BigInteger,
-    String
+    String,
+    Text
 )
 from sqlalchemy import sql
 
@@ -23,7 +24,7 @@ class User(db.Model):
     full_name = Column(String(100))
     username = Column(String(50))
     phone_number = Column(String(50), nullable=True)
-    token = Column(String(255), nullable=True)
+    token = Column(Text, nullable=True)
     query: sql.Select
 
     def __repr__(self):
