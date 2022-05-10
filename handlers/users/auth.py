@@ -3,6 +3,8 @@ from aiogram.dispatcher import FSMContext
 from aiogram.types import Message
 from aiogram import types
 from aiogram.dispatcher.filters import Text
+
+from keyboards.default import menu_ru_button, menu_uz_button
 from loader import dp
 import database
 from states import Authentication, Home
@@ -21,9 +23,9 @@ async def error_happened(message, state, user_id):
         await state.finish()
 
 
-@dp.message_handler(Text(equals=["🇷🇺 Русский", "🇺🇿 O'zbek"]))
+@dp.message_handler(Text(equals=["🇷🇺 Русский", "🇺🇿 O'zbek"]), state=Authentication.init)
 async def set_language(message: Message):
-    user_id = types.User.get_current().id
+    user_id = message.from_user.id
     if message.text == "🇷🇺 Русский":
         LANG_STORAGE[user_id] = 'ru'
         await db.set_language('ru')
@@ -40,12 +42,11 @@ async def get_phone_number(message: Message):
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         keyboard.add(types.KeyboardButton(text="мой номер ☎", request_contact=True))
         await message.answer("Отправить мой номер боту:", reply_markup=keyboard)
-        await Authentication.step_one.set()
     elif LANG_STORAGE[user_id] == 'uz':
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
         keyboard.add(types.KeyboardButton(text="Mening raqamim", request_contact=True))
         await message.answer("Mening raqamimni botga yuboring:", reply_markup=keyboard)
-        await Authentication.step_one.set()
+    await Authentication.step_one.set()
 
 
 @dp.message_handler(state=Authentication.step_one, content_types=types.ContentTypes.CONTACT)
@@ -58,7 +59,7 @@ async def process_step_one(message: types.Message, state: FSMContext):
         "mobile": mobile,
         "lang": lang
     }
-    r = requests.post(f"{API_URL}/auth/step-1", data=request_body)
+    r = requests.post(f"{API_URL}/v4/auth/step-1", json=request_body)
     if r.status_code == 200 and r.json()["status"]:
         data = r.json()
         OTP_TOKEN_STORAGE[user_id] = data["data"][0]["otp"]
@@ -82,7 +83,7 @@ async def process_step_two(message: types.Message, state: FSMContext):
             "otp": data["otp"],
             "forgot": 0
         }
-        r = requests.post(f"{API_URL}/auth/step-2", data=request_body)
+        r = requests.post(f"{API_URL}/v4/auth/step-2", json=request_body)
         if r.status_code == 200 and r.json()["status"]:
             data = r.json()
             is_registered = data["data"][0]["is_registered"]
@@ -118,12 +119,16 @@ async def login(message: types.Message, state: FSMContext):
                 "version": "no"
             }
         }
-        r = requests.post(f"{API_URL}/auth/login", data=request_body)
+        endpoint = f"{API_URL}/v4/auth/login"
+        r = requests.post(endpoint, json=request_body)
         if r.status_code == 200 and r.json()["status"]:
             data = r.json()
             access_token = data["data"][0]["access_token"]
             await db.set_token(access_token)
-            await Home.home_menu()
+            if LANG_STORAGE[user_id] == 'ru':
+                await message.answer("👇 Выберите действие:", reply_markup=menu_ru_button)
+            elif LANG_STORAGE[user_id] == 'uz':
+                await message.answer("👇 Xizmat turini tanlang:", reply_markup=menu_uz_button)
         else:
             await error_happened(message, state, user_id)
 
@@ -154,12 +159,16 @@ async def register(message: types.Message, state: FSMContext):
                     "version": "no"
                 }
             }
-            r = requests.post(f"{API_URL}/auth/register", data=request_body)
+            endpoint = f"{API_URL}/v4/auth/register"
+            r = requests.post(endpoint, json=request_body)
             if r.status_code == 200 and r.json()["status"]:
                 data = r.json()
                 access_token = data["data"][0]["access_token"]
                 await db.set_token(access_token)
-                await Home.home_menu()
+                if LANG_STORAGE[user_id] == 'ru':
+                    await message.answer("👇 Выберите действие:", reply_markup=menu_ru_button)
+                elif LANG_STORAGE[user_id] == 'uz':
+                    await message.answer("👇 Xizmat turini tanlang:", reply_markup=menu_uz_button)
             else:
                 await error_happened(message, state, user_id)
     else:
